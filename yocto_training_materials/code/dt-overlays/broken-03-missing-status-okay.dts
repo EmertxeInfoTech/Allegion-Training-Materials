@@ -1,0 +1,25 @@
+/*
+ * BROKEN #3 (D3S3): parent bus disabled
+ * Symptom: an I2C sensor node is present but never probed.
+ */
+/dts-v1/;
+/plugin/;
+
+&i2c1 {
+    /* BUG: the i2c1 controller is 'disabled' at the SoC level, so any child
+       node here is ignored. We forgot to enable it. */
+
+    bme280@76 {
+        compatible = "bosch,bme280";
+        reg = <0x76>;
+    };
+};
+
+/*
+ * FIX: enable the bus in the overlay:
+ *   &i2c1 {
+ *       status = "okay";
+ *       bme280@76 { ... };
+ *   };
+ * Verify:  ls /sys/bus/i2c/devices/  and  i2cdetect -y 1
+ */

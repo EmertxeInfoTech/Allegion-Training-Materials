@@ -1,0 +1,50 @@
+# ============================================================================
+# local.conf - annotated sample for the training build
+# Lives at: build/conf/local.conf
+# These are YOUR personal build settings; not checked into the product repo.
+# ============================================================================
+
+# --- Target machine. Start with QEMU; switch to hardware later. ---
+MACHINE ??= "qemux86-64"
+
+# --- Distro policy. 'poky' is the reference distro. ---
+DISTRO ?= "poky"
+
+# --- Package format. ipk is the lean default for embedded. ---
+PACKAGE_CLASSES ?= "package_ipk"
+
+# --- Where downloads and shared state live. Share these across builds! ---
+DL_DIR ?= "${HOME}/yocto/downloads"
+SSTATE_DIR ?= "${HOME}/yocto/sstate-cache"
+
+# --- Parallelism. Rule of thumb: BB_NUMBER_THREADS x PARALLEL_MAKE ~= cores x 2.
+#     For an 8-core / 16 GB machine, 4 x 4 is a safe starting point. ---
+BB_NUMBER_THREADS ?= "4"
+PARALLEL_MAKE ?= "-j 4"
+
+# --- Developer conveniences. REMOVE debug-tweaks for any shipped image! ---
+EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
+
+# debug-tweaks         : empty root password, easy serial login
+# tools-debug          : gdb, strace, etc. on target
+# ssh-server-openssh   : run sshd
+# package-management   : opkg/apt/dnf available in the rootfs
+# EXTRA_IMAGE_FEATURES += " tools-debug ssh-server-openssh"
+
+# --- Trim locale data to keep the image small ---
+IMAGE_LINGUAS ?= "en-us"
+
+# --- Disk space monitoring: abort cleanly before filling the disk ---
+BB_DISKMON_DIRS ??= "\
+    STOPTASKS,${TMPDIR},1G,100K \
+    STOPTASKS,${DL_DIR},1G,100K \
+    STOPTASKS,${SSTATE_DIR},1G,100K \
+    ABORT,${TMPDIR},100M,1K \
+    ABORT,${DL_DIR},100M,1K \
+    ABORT,${SSTATE_DIR},100M,1K"
+
+# --- Keep build metadata for reproducibility ---
+INHERIT += "buildhistory"
+BUILDHISTORY_COMMIT = "1"
+
+CONF_VERSION = "2"

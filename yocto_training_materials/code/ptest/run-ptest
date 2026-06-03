@@ -1,0 +1,23 @@
+#!/bin/sh
+# run-ptest (D3S9)
+# Minimal example of a run-ptest script. ptest-runner executes this and parses
+# lines beginning with PASS:, FAIL:, or SKIP: to tally results.
+# Install it to ${PTEST_PATH}/run-ptest in do_install_ptest().
+
+# Example: verify our gw-info tool exists and runs.
+if command -v gw-info >/dev/null 2>&1; then
+    if gw-info >/dev/null 2>&1; then
+        echo "PASS: gw-info runs"
+    else
+        echo "FAIL: gw-info present but exits non-zero"
+    fi
+else
+    echo "FAIL: gw-info not installed"
+fi
+
+# Example: confirm the status LED was exposed by our device tree overlay.
+if [ -d /sys/class/leds/status ]; then
+    echo "PASS: status LED present"
+else
+    echo "SKIP: status LED not present (QEMU has no GPIO)"
+fi

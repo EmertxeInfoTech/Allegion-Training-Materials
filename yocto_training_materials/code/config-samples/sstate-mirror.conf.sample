@@ -1,0 +1,23 @@
+# ============================================================================
+# Shared sstate + downloads mirror (D2S6)
+# Add these lines to each developer's build/conf/local.conf.
+# One person (or CI) populates the mirror; everyone else gets cache hits.
+# ============================================================================
+
+# Read shared state from the team server first, then fall back to building.
+# The 'PATH' token is replaced by BitBake with the correct sub-path.
+SSTATE_MIRRORS ?= "\
+file://.* http://build.company.local/sstate/PATH;downloadfilename=PATH \n\
+"
+
+# Optional: a shared source (downloads) mirror, so everyone doesn't re-fetch.
+SOURCE_MIRROR_URL ?= "http://build.company.local/downloads/"
+INHERIT += "own-mirrors"
+
+# Optional but recommended for teams: hash equivalence server.
+# Lets cosmetic recipe changes still hit downstream cache.
+BB_SIGNATURE_HANDLER = "OEEquivHash"
+BB_HASHSERVE = "auto"
+# For a shared server instead of local:
+# BB_HASHSERVE = "build.company.local:8686"
+# BB_HASHSERVE_UPSTREAM = "hashserv.yoctoproject.org:8687"

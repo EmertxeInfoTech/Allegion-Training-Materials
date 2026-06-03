@@ -1,0 +1,24 @@
+/*
+ * BROKEN #2 (D3S3): GPIO already claimed by another node
+ * Symptom: dmesg shows "gpio-leds: probe failed with -EBUSY".
+ */
+/dts-v1/;
+/plugin/;
+
+&{/} {
+    status-led {
+        compatible = "gpio-leds";
+        led-status {
+            label = "status";
+            /* BUG: GPIO 17 is already requested by another driver (e.g. a
+               button or the bootloader). Two consumers cannot share a line. */
+            gpios = <&gpio 17 0>;
+        };
+    };
+};
+
+/*
+ * FIX: pick a free GPIO. Check what holds the line on the running system:
+ *   cat /sys/kernel/debug/gpio
+ * Then change the number to a free one, e.g. <&gpio 23 0>.
+ */

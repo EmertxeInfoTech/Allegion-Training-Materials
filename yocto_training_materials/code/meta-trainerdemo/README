@@ -1,0 +1,25 @@
+meta-trainerdemo
+================
+
+This layer is built up over the four-day Yocto training. It is the single
+home for every customization we make in class.
+
+Contents by session
+--------------------
+  recipes-trainergw/hello/          D1S7  - first custom package
+  recipes-trainergw/gw-info/        D1 task - device info script
+  recipes-trainergw/packagegroups/  D2S3  - packagegroup bundling
+  recipes-kernel/linux/             D2S4, D3S2 - kernel config + hardening
+
+Dependencies
+------------
+  URI: git://git.yoctoproject.org/poky (meta, meta-poky)
+  branch: scarthgap
+
+Adding this layer to a build
+----------------------------
+  $ bitbake-layers add-layer ../meta-trainerdemo
+
+Maintainer
+----------
+  Emertxe Information Technologies - training@emertxe.com

@@ -1,0 +1,23 @@
+/*
+ * BROKEN #4 (D3S3): device waits forever on a missing clock (EPROBE_DEFER)
+ * Symptom: cat /sys/kernel/debug/devices_deferred lists the device; dmesg says
+ *          "failed to get clock".
+ */
+/dts-v1/;
+/plugin/;
+
+&{/soc} {
+    myserial: serial@11000000 {
+        compatible = "vendor,my-uart";
+        reg = <0x11000000 0x1000>;
+        /* BUG: 'clocks' references a phandle that doesn't exist / is disabled.
+           The driver returns -EPROBE_DEFER and retries forever. */
+        clocks = <&nonexistent_clk 0>;
+    };
+};
+
+/*
+ * FIX: point 'clocks' at a real, enabled clock provider, or enable the clock
+ * controller node. Confirm the phandle resolves in the live tree:
+ *   dtc -I fs -O dts /sys/firmware/devicetree/base | less
+ */

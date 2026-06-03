@@ -1,0 +1,23 @@
+/*
+ * BROKEN #1 (D3S3): wrong compatible string
+ * Symptom: node exists in the live DT but no driver binds; nothing in
+ *          /sys/class/leds/.
+ */
+/dts-v1/;
+/plugin/;
+
+&{/} {
+    status-led {
+        /* BUG: there is no driver matching "gpio-led" (singular). */
+        compatible = "gpio-led";
+        led-status {
+            label = "status";
+            gpios = <&gpio 17 0>;
+        };
+    };
+};
+
+/*
+ * FIX: the correct compatible is "gpio-leds" (plural). Check the binding doc:
+ *   Documentation/devicetree/bindings/leds/leds-gpio.yaml
+ */

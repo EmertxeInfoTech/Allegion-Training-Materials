@@ -1,0 +1,11 @@
+# trainergw-simple.wks (D3S4/D3S5)
+# Simplest layout: one boot partition + one rootfs. No update redundancy.
+# Good for bring-up and lab work; NOT recommended for fielded products.
+
+part /boot --source bootimg-partition --ondisk mmcblk0 --fstype=vfat \
+     --label boot --active --align 4 --fixed-size 64M
+
+part /     --source rootfs --ondisk mmcblk0 --fstype=ext4 \
+     --label root --align 4
+
+bootloader --ptable msdos --append="root=/dev/mmcblk0p2 rootwait console=ttyS0,115200"

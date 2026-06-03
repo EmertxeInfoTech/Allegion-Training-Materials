@@ -1,0 +1,20 @@
+# trainergw-ab.wks (D3S5)
+# A/B redundant layout: two rootfs slots + a shared data partition.
+# Enables atomic updates with rollback. Recommended for fielded products.
+
+part /boot     --source bootimg-partition --ondisk mmcblk0 --fstype=vfat \
+     --label boot --active --align 4 --fixed-size 64M
+
+# Slot A (initially populated with the rootfs)
+part /         --source rootfs --ondisk mmcblk0 --fstype=ext4 \
+     --label rootfs_a --align 4 --fixed-size 512M
+
+# Slot B (empty; the updater writes the new image here, then switches)
+part --source empty --ondisk mmcblk0 --fstype=ext4 \
+     --label rootfs_b --align 4 --fixed-size 512M
+
+# Persistent data survives updates of either slot.
+part /data     --source empty --ondisk mmcblk0 --fstype=ext4 \
+     --label data --align 4 --size 256M
+
+bootloader --ptable gpt --append="rootwait console=ttyS0,115200"

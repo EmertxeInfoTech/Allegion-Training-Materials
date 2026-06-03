@@ -1,0 +1,19 @@
+# trainergw-ro-overlay.wks (D3S5)
+# Read-only root + writable overlay + data. Tamper-evident, fast factory reset.
+
+part /boot     --source bootimg-partition --ondisk mmcblk0 --fstype=vfat \
+     --label boot --active --align 4 --fixed-size 64M
+
+# Read-only squashfs root (compressed, immutable).
+part /         --source rootfs --ondisk mmcblk0 --fstype=squashfs \
+     --label root_ro --align 4
+
+# Writable overlay for the bits of the filesystem that must change.
+part /overlay  --source empty --ondisk mmcblk0 --fstype=ext4 \
+     --label overlay --align 4 --fixed-size 128M
+
+# Application data.
+part /data     --source empty --ondisk mmcblk0 --fstype=ext4 \
+     --label data --align 4 --size 256M
+
+bootloader --ptable gpt --append="rootwait console=ttyS0,115200 ro"

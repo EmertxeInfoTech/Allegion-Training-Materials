@@ -1,0 +1,12 @@
+#!/bin/sh
+# gw-info - print basic device information
+
+echo "==================== TrainerGW Device Info ===================="
+echo "Kernel version : $(uname -r)"
+echo "Hostname       : $(hostname)"
+echo "Uptime         : $(uptime | sed 's/^ *//')"
+
+# Primary IP address (first non-loopback IPv4)
+IP=$(ip -4 -o addr show scope global 2>/dev/null | awk '{print $4}' | head -n1)
+echo "IP address     : ${IP:-<none>}"
+echo "==============================================================="

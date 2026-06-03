@@ -1,0 +1,23 @@
+/*
+ * trainergw-status-led.dts  (D3S3 - WORKING reference overlay)
+ * A GPIO-driven status LED. This is the known-good overlay used in the image.
+ *
+ * Build:  the kernel devicetree build (KERNEL_DEVICETREE) compiles .dts -> .dtb
+ * Verify: after boot, /sys/class/leds/status should exist.
+ */
+/dts-v1/;
+/plugin/;
+
+&{/} {
+    status_led: status-led {
+        compatible = "gpio-leds";
+
+        led-status {
+            label = "status";
+            /* GPIO controller phandle, line 17, active high */
+            gpios = <&gpio 17 0>;
+            default-state = "off";
+            linux,default-trigger = "heartbeat";
+        };
+    };
+};

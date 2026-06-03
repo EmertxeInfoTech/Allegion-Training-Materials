@@ -1,0 +1,15 @@
+# INCOMPATIBLE_LICENSE policy (D3S7)
+# Add to your distro.conf (preferred) or local.conf.
+
+# Refuse GPL-3 family across the build. Common for locked-down embedded
+# products that cannot satisfy GPL-3's anti-Tivoization (user-installable
+# modified firmware) requirement.
+INCOMPATIBLE_LICENSE = "GPL-3.0-only GPL-3.0-or-later AGPL-3.0-only AGPL-3.0-or-later LGPL-3.0-only LGPL-3.0-or-later"
+
+# To allow specific commercially-flagged packages through:
+# LICENSE_FLAGS_ACCEPTED = "commercial_ffmpeg commercial_gstreamer1.0-plugins-ugly"
+
+# Generate an SBOM and license manifest at build time:
+# INHERIT += "create-spdx"
+# COPY_LIC_MANIFEST = "1"
+# COPY_LIC_DIRS = "1"
