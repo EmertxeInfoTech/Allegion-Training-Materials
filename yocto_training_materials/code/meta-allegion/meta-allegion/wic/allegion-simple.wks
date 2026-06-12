@@ -1,0 +1,7 @@
+# Simple 2-partition layout (boot + rootfs) for initial bring-up
+part /boot --source bootimg-partition --ondisk mmcblk --fstype=vfat \
+    --label BOOT --active --align 4 --size 64M
+part / --source rootfs --ondisk mmcblk --fstype=ext4 \
+    --label ROOT --align 4
+
+bootloader --ptable msdos

@@ -1,0 +1,21 @@
+# Allegion SD card / eMMC partition layout
+# 4 partitions: boot, system A, system B (for A/B OTA), data
+# See Image Engineering and A/B Updates study guides
+
+# Boot: FAT32, bootloader + kernel + dtb
+part /boot --source bootimg-partition --ondisk mmcblk --fstype=vfat \
+    --label BOOT --active --align 4 --size 64M
+
+# System A: the active rootfs
+part / --source rootfs --ondisk mmcblk --fstype=ext4 \
+    --label SYSTEM_A --align 4 --size 512M
+
+# System B: standby for A/B updates (empty at flash time)
+part --ondisk mmcblk --fstype=ext4 --label SYSTEM_B \
+    --align 4 --size 512M
+
+# Data: persistent, writable (logs, config, state)
+part /data --ondisk mmcblk --fstype=ext4 --label DATA \
+    --align 4 --size 512M
+
+bootloader --ptable msdos
